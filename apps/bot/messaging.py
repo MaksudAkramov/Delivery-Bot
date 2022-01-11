@@ -24,60 +24,55 @@ def send_hello(message):
     keyboard = keyboards.user_keyboard()
     bot.send_message(message.from_user.id, text=str(text),reply_markup=keyboard)
 
+
 def request_number(message):
     keyboard = keyboards.share_contact_number()
     text = _('Please enter your phone number: ')
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
+
 def congrat(message):
     user = BotUser.objects.filter(id=message.from_user.id).first()
-    text1 = _("Dear")
-    text2 = _("Thanks for registration")
-    text = f"{text1} {user.full_name}, {text2}"
+    text1 = _("Successful registration")
+    text = f"{text1}, {user.full_name}!"
     if user.is_admin:
         keyboard = keyboards.admin_keyboard()
     else:
         keyboard = keyboards.user_keyboard()
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
-def get_menu(message: types.Message):    
-    
-    text = str(_("What do you want to eat"))
-    keyboard = keyboards.get_menu_keyboard()
+
+def get_catalog(message: types.Message):    
+    text = str(_("Where do we start?"))
+    keyboard = keyboards.get_category_keyboard()
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
 
 def settings(message:types.Message):
-
-    text = _("Please choice settings")
-    keyboard = keyboards.setting_keyboard()
+    text = _("What do you want to change?")
+    keyboard = keyboards.settings_keyboard()
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
+
 def change_name(message: types.Message):
-    
-    text = _("Input your new name")
+    text = _("Enter your name:")
     keyboard = keyboards.back()
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
-def send_new_status(message: types.Message):
 
-    user = BotUser.objects.filter(id=message.from_user.id).first()
-    name = str(_("Full Name"))
-    language = str (_("Language"))
-    number = str (_("Phone Number"))
-
-    text = f"Updated!\n {name}: {user.full_name}\n {language}: {user.locale}\n {number}: {user.phone_number}"
-    
-    keyboard = keyboards.setting_keyboard()
+def send_updated_status(message: types.Message):
+    text = _('Updated! Now, you can continue your order')
+    keyboard = keyboards.settings_keyboard()
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
 
 def back (message: types.Message):
     text = str(_("Return to Homepage"))
     keyboard = keyboards.user_keyboard()
-    bot.send_message(chat_id =message.from_user.id ,text = text, reply_markup = keyboard)
+    bot.send_message(chat_id=message.from_user.id, text=text, reply_markup=keyboard)
 
 
 def change_number(message):
     keyboard = keyboards.change_contact_number()
-    text = _('Send your new number')
+    text = _('Enter your new number')
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)

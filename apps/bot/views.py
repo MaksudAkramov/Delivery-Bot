@@ -1,12 +1,13 @@
+from telebot import types
+
 from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext_lazy as _
-from telebot import types
 
 from apps.bot import bot
+from apps.bot import messaging
 from apps.bot.utils import change_locale, with_locale
 from apps.bot.models import BotUser
-from apps.bot import messaging
 
 
 @csrf_exempt
@@ -39,8 +40,8 @@ def on_language_specified(message):
 @with_locale
 def on_full_name_specified(message):
     
-    full_name= str(message.text)
-    BotUser.objects.update(id=message.from_user.id, full_name = full_name)
+    full_name = str(message.text)
+    BotUser.objects.update(id=message.from_user.id, full_name=full_name)
     messaging.request_number(message)
     bot.register_next_step_handler(message, on_number_specified)
 
@@ -59,8 +60,8 @@ def on_command_specified(message: types.Message):
     if message.text == str(_("Settings")):
         messaging.settings(message)
         bot.register_next_step_handler(message, on_changes_specified)
-    if message.text ==str(_("Menu")):
-        messaging.get_menu(message)
+    if message.text ==str(_("Catalog")):
+        messaging.get_catalog(message)
 
 @with_locale
 def on_changes_specified(message: types.Message):
@@ -85,14 +86,14 @@ def on_name_change_specified(message: types.Message):
     else:
         full_name = str(message.text)
         BotUser.objects.update(id=message.from_user.id, full_name = full_name)
-        messaging.send_new_status(message)
+        messaging.send_updated_status(message)
         bot.register_next_step_handler(message, on_changes_specified)
 
 @with_locale
 def on_language_change_specified(message: types.Message):
         locale = BotUser.Locale.get_from_value(message.text)
         BotUser.objects.update(id=message.from_user.id, locale = locale)
-        messaging.send_new_status(message)
+        messaging.send_updated_status(message)
         bot.register_next_step_handler(message, on_changes_specified)
 
 @with_locale
@@ -106,5 +107,5 @@ def on_number_change_specified(message):
         else:
             phone_number = message.text
         BotUser.objects.update(id=message.from_user.id, phone_number = phone_number)
-        messaging.send_new_status(message)
+        messaging.send_updated_status(message)
         bot.register_next_step_handler(message, on_changes_specified)
