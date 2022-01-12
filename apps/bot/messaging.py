@@ -76,3 +76,25 @@ def change_number(message):
     keyboard = keyboards.change_contact_number()
     text = _('Enter your new number')
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+def show_product(message,product):
+    keyboard = keyboards.back()
+    name = product.name
+    price = product.price
+    temp = _("Price:")
+    usz = _("Sum")
+    text = f"{name} \n\n{temp} {price} {usz}"
+    bot.send_photo(message.from_user.id, product.img,str(text),reply_markup=keyboard)
+
+
+def get_menu(message: types.Message):    
+    
+    text = str(_("What do you want to order"))
+    keyboard = keyboards.get_menu_keyboard()
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+
+def get_category_menu(message: types.Message, cat):    
+    text = str(_("Chooce product you want"))
+    keyboard = keyboards.get_product_menu_keyboard(cat)
+    bot.send_photo(message.from_user.id, photo=open(f"{cat.img}", 'rb'), caption=str(text), reply_markup=keyboard)    
