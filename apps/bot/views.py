@@ -10,6 +10,10 @@ from apps.bot.utils import change_locale, with_locale
 from apps.bot.models import BotUser
 
 
+
+from apps.product.models import Category, Product
+
+
 @csrf_exempt
 def handle(request):
     request_body_dict = request.body.decode('UTF-8')
@@ -62,6 +66,10 @@ def on_command_specified(message: types.Message):
         bot.register_next_step_handler(message, on_changes_specified)
     if message.text ==str(_("Catalog")):
         messaging.get_catalog(message)
+        bot.register_next_step_handler(message, on_order_specified)
+    else:
+        bot.register_next_step_handler(message, on_command_specified)
+
 
 @with_locale
 def on_changes_specified(message: types.Message):
@@ -109,3 +117,32 @@ def on_number_change_specified(message):
         BotUser.objects.update(id=message.from_user.id, phone_number = phone_number)
         messaging.send_updated_status(message)
         bot.register_next_step_handler(message, on_changes_specified)
+
+@with_locale
+def on_order_specified(message: types.Message):
+    if message.text == str(_("Back")):
+            messaging.back(message)
+            bot.register_next_step_handler(message, on_command_specified)
+    categories = Category.objects.all()
+    for cat in categories:
+        if message.text == cat.name:
+            messaging.get_category_menu(message,cat)
+            bot.register_next_step_handler(message, choose_product, cat)
+
+@with_locale
+def choose_product(message,cat):
+    product = Product.objects.filter(name = str(message.text)).first()
+    if message.text == str(_('Back')):
+        messaging.get_category(message)
+        bot.register_next_step_handler(message, on_order_specified)
+    if product is not None:
+        messaging.show_product(message,product)
+        bot.register_next_step_handler(message, detail_product,cat)
+    else:
+        bot.register_next_step_handler(message, choose_product,cat)
+
+@with_locale
+def detail_product(message,cat):
+    if message.text == str(_('Back')):
+        messaging.get_product(message,cat)
+        bot.register_next_step_handler(message, choose_product,cat)
