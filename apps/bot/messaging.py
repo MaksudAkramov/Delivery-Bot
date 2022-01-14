@@ -78,7 +78,7 @@ def change_number(message):
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
 def show_product(message,product):
-    keyboard = keyboards.back()
+    keyboard = keyboards.add_to_basket_with_back_keyboard()
     name = product.name
     price = product.price
     temp = _("Price:")
@@ -98,3 +98,8 @@ def get_category_menu(message: types.Message, cat):
     text = str(_("Chooce product you want"))
     keyboard = keyboards.get_product_menu_keyboard(cat)
     bot.send_photo(message.from_user.id, photo=open(f"{cat.img}", 'rb'), caption=str(text), reply_markup=keyboard)    
+
+def add_to_basket_message(message: types.Message):
+    text = str(_("Add product to basket")) 
+    keyboard = keyboards.add_to_basket_keyboard()
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)

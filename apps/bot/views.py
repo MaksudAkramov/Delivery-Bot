@@ -82,13 +82,13 @@ def on_changes_specified(message: types.Message):
     elif message.text == str(_("Change Phone Number")):
         messaging.change_number(message)
         bot.register_next_step_handler(message, on_number_change_specified)
-    elif message.text == str(_("Back")):
+    elif message.text == str(_("⏪️Back")):
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)
 
 @with_locale
 def on_name_change_specified(message: types.Message):
-    if message.text == str(_("Back")):
+    if message.text == str(_("⏪️Back")):
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)
     else:
@@ -106,7 +106,7 @@ def on_language_change_specified(message: types.Message):
 
 @with_locale
 def on_number_change_specified(message):
-    if message.text == str(_("Back")):
+    if message.text == str(_("⏪️Back")):
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)
     else:
@@ -120,7 +120,7 @@ def on_number_change_specified(message):
 
 @with_locale
 def on_order_specified(message: types.Message):
-    if message.text == str(_("Back")):
+    if message.text == str(_("⏪️Back")):
             messaging.back(message)
             bot.register_next_step_handler(message, on_command_specified)
     categories = Category.objects.all()
@@ -132,17 +132,20 @@ def on_order_specified(message: types.Message):
 @with_locale
 def choose_product(message,cat):
     product = Product.objects.filter(name = str(message.text)).first()
-    if message.text == str(_('Back')):
-        messaging.get_category(message)
+    if message.text == str(_('⏪️Back')):
+        messaging.get_category_menu(message, cat)
         bot.register_next_step_handler(message, on_order_specified)
     if product is not None:
         messaging.show_product(message,product)
-        bot.register_next_step_handler(message, detail_product,cat)
-    else:
-        bot.register_next_step_handler(message, choose_product,cat)
+        bot.register_next_step_handler(message, detail_product, cat)
+    # else:
+    #     bot.register_next_step_handler(message, choose_product,cat)
+
 
 @with_locale
-def detail_product(message,cat):
-    if message.text == str(_('Back')):
-        messaging.get_product(message,cat)
-        bot.register_next_step_handler(message, choose_product,cat)
+def detail_product(message, cat):
+    if message.text == str(_('⏪️Back')):
+        messaging.get_category_menu(message, cat)
+        bot.register_next_step_handler(message, choose_product, cat)
+
+    
