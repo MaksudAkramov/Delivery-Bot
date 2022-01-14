@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 
 # Create your models here.
 
@@ -17,3 +18,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
+
+class Basket(models.Model):
+    items = models.ForeignKey(Product, on_delete=CASCADE)    
+    total_price = models.IntegerField()

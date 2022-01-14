@@ -1,6 +1,9 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 
 from django.utils.translation import gettext_lazy as _
+
+from apps.product.models import Basket
 
 
 class BotUser(models.Model):
@@ -23,3 +26,4 @@ class BotUser(models.Model):
     full_name = models.CharField(max_length=50, verbose_name=_('Full Name'), null=True, blank=True)
     phone_number = models.CharField(max_length=20, verbose_name=_('Phone Number'), null=True, blank=True)
     is_admin = models.BooleanField(default=False)
+    basket = models.ForeignKey(Basket, on_delete=CASCADE, null=True)
