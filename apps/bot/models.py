@@ -27,3 +27,7 @@ class BotUser(models.Model):
     phone_number = models.CharField(max_length=20, verbose_name=_('Phone Number'), null=True, blank=True)
     is_admin = models.BooleanField(default=False)
     basket = models.ForeignKey(Basket, on_delete=CASCADE, null=True)
+
+
+    def __str__(self) -> str:
+        return str(self.full_name)

@@ -18,6 +18,10 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
+    def __str__(self):
+        return self.name + "-" + str(self.price)
+ 
+
 
 class Basket(models.Model):
     items = models.ForeignKey(Product, on_delete=CASCADE)    
