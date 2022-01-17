@@ -1,6 +1,8 @@
+from cgitb import text
 from telebot import types
 from django.utils.translation import gettext_lazy as _
 import telebot
+from apps import cart
 
 from apps.bot import bot
 from apps.bot import keyboards
@@ -66,7 +68,7 @@ def send_updated_status(message: types.Message):
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
 
-def back (message: types.Message):
+def back(message: types.Message):
     text = str(_("Return to Homepage"))
     keyboard = keyboards.user_keyboard()
     bot.send_message(chat_id=message.from_user.id, text=text, reply_markup=keyboard)
@@ -77,7 +79,7 @@ def change_number(message):
     text = _('Enter your new number')
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
-def show_product(message,product):
+def show_product(message, product):
     keyboard = keyboards.add_to_basket_with_back_keyboard()
     name = product.name
     price = product.price
@@ -103,3 +105,77 @@ def add_to_basket_message(message: types.Message):
     text = str(_("Add product to basket")) 
     keyboard = keyboards.add_to_basket_keyboard()
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+
+def choose_quantity_message(message: types.Message):
+    text = str(_(f"How many items do you want to purchase? \nIf you want to purchase more than 6 items, write down your number in digits , e.g: 10"))
+    keyboard = keyboards.choose_quantity_keyboard()    
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+
+def added_item_message(message, product, quantity):
+    keyboard = keyboards.cart_status()
+    name = product.name
+    quantity = quantity
+    quantity_txt = str(_('pc(s) of'))
+    status_txt = str(_('added to your cart!'))
+    text = f"{quantity} {quantity_txt} {name} {status_txt}"
+    bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)  
+
+def anything_else_message(message: types.Message):
+    keyboard = keyboards.cart_status()
+    text = str(_("Anything else? 😉"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+
+def show_cart_items_in_the_beginning_messaging(message, cart_items):
+    keyboard = keyboards.cart_items_in_the_beginning_keyboard(cart_items)
+    item_list = []
+    for item in cart_items:
+        item_txt = str({item.product} - {item.quantity})
+        item_list.append(item_txt)
+    item_list_newline = "\n".join(item_list)
+    your_cart_txt = str(_('Your Cart:'))
+    text = f"{your_cart_txt} \n{item_list_newline}"
+    bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)  
+
+def show_cart_items_messaging(message, cart_items):
+    keyboard = keyboards.cart_items_keyboard(cart_items)
+    item_list = []
+    for item in cart_items:
+        item_txt = str({item.product} - {item.quantity})
+        item_list.append(item_txt)
+    item_list_newline = "\n".join(item_list)
+    your_cart_txt = str(_('Your Cart:'))
+    text = f"{your_cart_txt} \n{item_list_newline}"
+    bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)
+
+def show_empty_cart_items_messaging(message, cart_items):
+    keyboard = None
+    text = str(_(f"It seems like you didn't put anything into your cart. 😔 \nLet's order something! 😊")) 
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)    
+
+def let_us_continue(message):
+    keyboard = keyboards.cart_status()
+    text = str(_("Ok, let's continue!"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+def empty_cart_message(message):
+    keyboard = None
+    text = str(_(f"Your cart is empty, now! \nLet's order something! 😊")) 
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)  
+
+def let_us_fill_the_cart(message):
+    keyboard = None
+    text = str(_(f"It seems like you didn't put anything into your cart. 😔 \nLet's order something! 😊")) 
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)  
+
+
+
+
+
+
+
+
+
+
