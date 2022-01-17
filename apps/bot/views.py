@@ -76,8 +76,6 @@ def on_command_specified(message: types.Message):
     else:
         bot.register_next_step_handler(message, on_command_specified)
     if message.text == str(_("Cart")):
-        # messaging.show_cart_items_in_the_beginning_messaging(message, cart_items)
-        # bot.register_next_step_handler(message, change_or_continue_your_order, cat, cart)
         if Cart.objects.filter(user=user).first():
             messaging.show_cart_items_messaging(message, cart_items)
             bot.register_next_step_handler(message, change_or_continue_your_order, cat, cart)
@@ -154,8 +152,7 @@ def choose_product(message,cat):
     if product is not None:
         messaging.show_product(message,product)
         bot.register_next_step_handler(message, detail_product, cat, product)
-    # else:
-    #     bot.register_next_step_handler(message, choose_product,cat)
+
 
 
 @with_locale

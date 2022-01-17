@@ -1,8 +1,5 @@
-from cgitb import text
 from telebot import types
 from django.utils.translation import gettext_lazy as _
-import telebot
-from apps import cart
 
 from apps.bot import bot
 from apps.bot import keyboards
