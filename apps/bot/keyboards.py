@@ -9,8 +9,10 @@ from apps.product.views import all_categories
 def get_category_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     categories = all_categories()
+    button1 = types.KeyboardButton(text = str(_("↩️Back")))
     for cat in categories:
         keyboard.add(types.KeyboardButton(text=str(cat)))
+    keyboard.add(button1)
     return keyboard
 
 def get_choose_language_keyboard():
@@ -49,7 +51,7 @@ def settings_keyboard():
     button1 = types.KeyboardButton(text= str(_("Change language")))
     button2 = types.KeyboardButton(text= str(_("Change Name")))
     button3 = types.KeyboardButton(text= str(_("Change Phone Number")))
-    button4 = types.KeyboardButton(text= str(_("send_updated_status")))
+    button4 = types.KeyboardButton(text= str(_("↩️Back")))
     keyboard.add(button1,button2,button3, button4)
 
     return keyboard
@@ -119,19 +121,6 @@ def add_to_basket_with_back_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     button1 = types.KeyboardButton(text=str(_('↩️Back')))
     button2 = types.KeyboardButton(text=str(_('Add product to basket')))
-    # count = 0
-    # for cat in Product.objects.filter(category = cat).all():
-    #     text = _(f"{cat.name}")
-    #     menu_button = types.KeyboardButton(text=str(text))
-    #     if count < 2:
-    #         buttons.append(menu_button)
-    #         count += 1
-    #     else:
-    #         count = 0
-    #         keyboard.row(*buttons)
-    #         buttons.clear()
-    #         buttons.append(menu_button)
-    # keyboard.row(*buttons)
     keyboard.add(button2, button1)
     return keyboard    
 

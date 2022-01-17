@@ -19,10 +19,4 @@ class Product(models.Model):
 
 
     def __str__(self):
-        return self.name + "-" + str(self.price)
- 
-
-
-class Basket(models.Model):
-    items = models.ForeignKey(Product, on_delete=CASCADE)    
-    total_price = models.IntegerField()
+        return self.name

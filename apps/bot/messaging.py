@@ -150,6 +150,11 @@ def show_cart_items_messaging(message, cart_items):
     text = f"{your_cart_txt} \n{item_list_newline}"
     bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)
 
+def show_empty_cart_items_messaging(message, cart_items):
+    keyboard = None
+    text = str(_(f"It seems like you didn't put anything into your cart. 😔 \nLet's order something! 😊")) 
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)    
+
 def let_us_continue(message):
     keyboard = keyboards.cart_status()
     text = str(_("Ok, let's continue!"))
@@ -157,7 +162,12 @@ def let_us_continue(message):
 
 def empty_cart_message(message):
     keyboard = None
-    text = str(_(f"Your cart is empty, now! \nLet's order anything else! 😊")) 
+    text = str(_(f"Your cart is empty, now! \nLet's order something! 😊")) 
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)  
+
+def let_us_fill_the_cart(message):
+    keyboard = None
+    text = str(_(f"It seems like you didn't put anything into your cart. 😔 \nLet's order something! 😊")) 
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)  
 
 

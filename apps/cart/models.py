@@ -1,13 +1,11 @@
 from django.db import models
 from datetime import datetime
-from apps.bot.models import BotUser
 
-# from apps.bot.models import BotUser
+from apps.bot.models import BotUser
 from apps.product.models import Product
 
 class Cart(models.Model):
     user = models.ForeignKey(BotUser, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(default=datetime.now)
 
 
     def __str__(self) -> str:
@@ -20,6 +18,6 @@ class CartItem(models.Model):
 
 
     def __str__(self) -> str:
-        return str(self.product)
+        return str(self.product.name)
 
 
