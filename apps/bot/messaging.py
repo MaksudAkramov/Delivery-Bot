@@ -99,7 +99,7 @@ def get_category_menu(message: types.Message, cat):
     bot.send_photo(message.from_user.id, photo=open(f"{cat.img}", 'rb'), caption=str(text), reply_markup=keyboard)    
 
 def add_to_basket_message(message: types.Message):
-    text = str(_("Add product to basket")) 
+    text = str(_("Add product to cart 🛒")) 
     keyboard = keyboards.add_to_basket_keyboard()
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
@@ -165,9 +165,28 @@ def empty_cart_message(message):
 def let_us_fill_the_cart(message):
     keyboard = None
     text = str(_(f"It seems like you didn't put anything into your cart. 😔 \nLet's order something! 😊")) 
-    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)  
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
 
+def choose_or_send_new_location_message(message):
+    keyboard = keyboards.choose_location_keyboard(message)
+    text = str(_("Please choose your last locations or send a new location 📍"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+
+def deliver_location_message(message, address):
+    keyboard = keyboards.confrim_keyboard()
+    text1 = str(_('We will deliver to this location:'))
+    text2 = str(address)
+    user = BotUser.objects.filter(id=message.from_user.id).first()
+    user_name = user.full_name
+    text = str(_(f"{text1} \n{text2}"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+def let_us_start_from_the_beginning_message(message):
+    keyboard = None
+    text = str(_("Let's start from the beginning!"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)    
 
 
 

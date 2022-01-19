@@ -29,3 +29,18 @@ class BotUser(models.Model):
 
     def __str__(self) -> str:
         return str(self.full_name)
+
+
+class Address(models.Model):
+    user = models.ForeignKey(BotUser, on_delete=models.CASCADE)
+
+
+    def __str__(self) -> str:
+        return str(self.user)
+
+class AddressItem(models.Model):
+    base = models.ForeignKey(Address, on_delete=models.CASCADE)
+    address = models.CharField(max_length=300, null=True)
+
+    def __str__(self) -> str:
+        return self.address

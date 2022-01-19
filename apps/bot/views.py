@@ -1,4 +1,5 @@
 from telebot import types
+from geopy.geocoders import Nominatim
 
 from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -7,11 +8,9 @@ from django.utils.translation import gettext_lazy as _
 from apps.bot import bot
 from apps.bot import messaging
 from apps.bot.utils import change_locale, with_locale
-from apps.bot.models import BotUser
+from apps.bot.models import Address, AddressItem, BotUser
 
 from apps.cart.models import Cart, CartItem
-
-
 
 from apps.product.models import Category, Product
 
@@ -67,15 +66,15 @@ def on_command_specified(message: types.Message):
     cart = Cart.objects.filter(user=user).first()
     cart_items = CartItem.objects.filter(cart=cart).all()
     cat = Category.objects.first()
-    if message.text == str(_("Settings")):
+    if message.text == str(_("⚙️Settings")):
         messaging.settings(message)
         bot.register_next_step_handler(message, on_changes_specified)
-    if message.text ==str(_("Catalog")):
+    if message.text ==str(_("📒Catalog")):
         messaging.get_catalog(message)
         bot.register_next_step_handler(message, on_order_specified)
     else:
         bot.register_next_step_handler(message, on_command_specified)
-    if message.text == str(_("Cart")):
+    if message.text == str(_("🛒Cart")):
         if Cart.objects.filter(user=user).first():
             messaging.show_cart_items_messaging(message, cart_items)
             bot.register_next_step_handler(message, change_or_continue_your_order, cat, cart)
@@ -87,13 +86,13 @@ def on_command_specified(message: types.Message):
 
 @with_locale
 def on_changes_specified(message: types.Message):
-    if message.text == str(_("Change language")):
+    if message.text == str(_("Change language 🌎")):
         messaging.request_language(message)
         bot.register_next_step_handler(message, on_language_change_specified)
     elif message.text == str(_("Change Name")):
         messaging.change_name(message)
         bot.register_next_step_handler(message, on_name_change_specified)
-    elif message.text == str(_("Change Phone Number")):
+    elif message.text == str(_("Change Phone Number 📱")):
         messaging.change_number(message)
         bot.register_next_step_handler(message, on_number_change_specified)
     elif message.text == str(_("↩️Back")):
@@ -160,7 +159,7 @@ def detail_product(message, cat, product):
     if message.text == str(_('↩️Back')):
         messaging.get_category_menu(message, cat)
         bot.register_next_step_handler(message, choose_product, cat)
-    if message.text == str(_('Add product to basket')):
+    if message.text == str(_('Add product to cart 🛒')):
         messaging.choose_quantity_message(message)
         bot.register_next_step_handler(message, add_quantity, product, cat)
         
@@ -189,7 +188,7 @@ def add_quantity(message, product, cat):
                                    
     bot.register_next_step_handler(message, check_cart, cat, cart)
 
-
+@with_locale  
 def check_cart(message, cat, cart):
     user = BotUser.objects.filter(id=message.from_user.id).first()
     if message.text == str(_('↩️Back')):
@@ -197,7 +196,7 @@ def check_cart(message, cat, cart):
         bot.register_next_step_handler(message, choose_product, cat)
 
     cart_items = CartItem.objects.filter(cart=cart).all()
-    if message.text == str(_('Cart')):
+    if message.text == str(_('🛒Cart')):
         if Cart.objects.filter(user=user).first():
             messaging.show_cart_items_messaging(message, cart_items)
             bot.register_next_step_handler(message, change_or_continue_your_order, cat, cart)
@@ -207,13 +206,14 @@ def check_cart(message, cat, cart):
             bot.register_next_step_handler(message, on_order_specified)
 
     if message.text == str(_('Order✅')):
-        pass
+        messaging.choose_or_send_new_location_message(message)
+        bot.register_next_step_handler(message, get_address)  
 
-    if message.text ==str(_('Return to catalog')):
+    if message.text ==str(_('Return to catalog 📒')):
         messaging.get_catalog(message)
         bot.register_next_step_handler(message, on_order_specified)
 
-
+@with_locale  
 def change_or_continue_your_order(message, cat, cart):
     if message.text == str(_('↩️Back')):
         messaging.let_us_continue(message)
@@ -236,11 +236,34 @@ def change_or_continue_your_order(message, cat, cart):
         messaging.let_us_continue(message)
         bot.register_next_step_handler(message, check_cart, cat, cart)
     if message.text == str(_('Order✅')):
-        pass    
+        messaging.choose_or_send_new_location_message(message)
+        bot.register_next_step_handler(message, get_address)    
 
+@with_locale
+def get_address(message):
+    user = BotUser.objects.filter(id=message.from_user.id).first()
+    address_model = Address.objects.filter(user=user).first()
+    all_addresses = AddressItem.objects.filter(base=address_model).all()
 
+    if message.text == str(_('❌Cancel order')):
+        messaging.let_us_start_from_the_beginning_message(message)
+        messaging.back(message)
+        bot.register_next_step_handler(message, on_command_specified)
 
+    if message.content_type == 'location':
+        coordinate1 = message.location.latitude
+        coordinate2 = message.location.longitude
+        coordinates = f"{coordinate1}, {coordinate2}"
+        geolocator = Nominatim(user_agent="apps.bot")
+        location = geolocator.reverse(coordinates)
+        address = str(location.address)
+        if not address_model:
+            address_model = Address.objects.create(user=user)
+        AddressItem.objects.create(base=address_model, address=address)
+        messaging.deliver_location_message(message, address)
+    
+    for address in all_addresses:
+        if message.text == str(address):
+            messaging.deliver_location_message(message, address)
 
-
-     
-
+            
