@@ -2,7 +2,7 @@ from telebot import types
 
 from django.utils.translation import gettext_lazy as _
 
-from apps.bot.models import BotUser
+from apps.bot.models import Address, AddressItem, BotUser
 from apps.product.models import Category, Product
 from apps.product.views import all_categories
 
@@ -23,7 +23,7 @@ def get_choose_language_keyboard():
 
 def share_contact_number():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    text=_("Share your phone number")
+    text=_("Share your phone number📱")
     reg_button = types.KeyboardButton(text=str(text), request_contact=True)
     keyboard.add(reg_button)
     return keyboard
@@ -32,25 +32,25 @@ def admin_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     text=_("Add ad")
     button1 = types.KeyboardButton(text=str(text))
-    button2 = types.KeyboardButton(text = str(_("Settings")))
+    button2 = types.KeyboardButton(text = str(_("⚙️Settings")))
     keyboard.add(button1,button2)
 
     return keyboard
 
 def user_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    button1 = types.KeyboardButton(text = str(_("Settings")))
-    button2 = types.KeyboardButton(text = str(_("Catalog")))
-    button3 = types.KeyboardButton(text = str(_("Cart")))
+    button1 = types.KeyboardButton(text = str(_("⚙️Settings")))
+    button2 = types.KeyboardButton(text = str(_("📒Catalog")))
+    button3 = types.KeyboardButton(text = str(_("🛒Cart")))
     keyboard.add(button1, button2, button3)
 
     return keyboard
 
 def settings_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    button1 = types.KeyboardButton(text= str(_("Change language")))
+    button1 = types.KeyboardButton(text= str(_("Change language 🌎")))
     button2 = types.KeyboardButton(text= str(_("Change Name")))
-    button3 = types.KeyboardButton(text= str(_("Change Phone Number")))
+    button3 = types.KeyboardButton(text= str(_("Change Phone Number 📱")))
     button4 = types.KeyboardButton(text= str(_("↩️Back")))
     keyboard.add(button1,button2,button3, button4)
 
@@ -66,7 +66,7 @@ def back():
 
 def change_contact_number():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    text=_("Share your phone number")
+    text=_("Share your phone number📱")
     reg_button = types.KeyboardButton(text=str(text), request_contact=True)
     text=_("Back")
     button = types.KeyboardButton(text=str(text))
@@ -120,7 +120,7 @@ def get_product_menu_keyboard(cat):
 def add_to_basket_with_back_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     button1 = types.KeyboardButton(text=str(_('↩️Back')))
-    button2 = types.KeyboardButton(text=str(_('Add product to basket')))
+    button2 = types.KeyboardButton(text=str(_('Add product to cart 🛒')))
     keyboard.add(button2, button1)
     return keyboard    
 
@@ -142,10 +142,10 @@ def choose_quantity_keyboard():
 
 def cart_status():    
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    button1 = types.KeyboardButton(text=str(_('Cart')))
+    button1 = types.KeyboardButton(text=str(_('🛒Cart')))
     button3 = types.KeyboardButton(text=str(_('Order✅')))
     button2 = types.KeyboardButton(text=str(_('↩️Back')))
-    button4 = types.KeyboardButton(text=str(_('Return to catalog')))
+    button4 = types.KeyboardButton(text=str(_('Return to catalog 📒')))
     keyboard.add(button2, button1, button3, button4)
     return keyboard
 
@@ -196,3 +196,33 @@ def cart_items_keyboard(cart_items):
 
 
 
+# def share_location_keyboard():
+#     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+#     text=_("Share your location, please 📍")
+#     reg_button = types.KeyboardButton(text=str(text), request_location=True)
+#     keyboard.add(reg_button)
+#     return keyboard
+
+
+def choose_location_keyboard(message):
+    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+
+    user = BotUser.objects.filter(id=message.from_user.id).first()
+    address_model = Address.objects.filter(user=user).first()
+    all_addresses = AddressItem.objects.filter(base=address_model).all()
+    
+    for adrs in all_addresses:
+        keyboard.add(types.KeyboardButton(text=str(adrs)))
+
+    text=_("Send new location 📍")
+    button1 = types.KeyboardButton(text=str(text), request_location=True)
+    button2 = types.KeyboardButton(text=str(_('❌Cancel order')))
+    keyboard.add(button1, button2)
+
+    return keyboard    
+
+def confrim_keyboard():
+    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    button = types.KeyboardButton(text=str(_('Confirm✅')))
+    keyboard.add(button)
+    return keyboard
