@@ -224,5 +224,13 @@ def choose_location_keyboard(message):
 def confrim_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     button = types.KeyboardButton(text=str(_('Confirm✅')))
-    keyboard.add(button)
+    button1 = types.KeyboardButton(text=str(_('❌Cancel order')))
+    keyboard.add(button, button1)
     return keyboard
+
+def order_more_or_to_beginning():
+    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    button1 = types.KeyboardButton(text=str(_('Order more➕')))
+    button2 = types.KeyboardButton(text=str(_('↩️Back to the beginning')))
+    keyboard.add(button1, button2)
+    return keyboard    

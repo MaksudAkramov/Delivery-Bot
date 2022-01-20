@@ -178,15 +178,26 @@ def deliver_location_message(message, address):
     keyboard = keyboards.confrim_keyboard()
     text1 = str(_('We will deliver to this location:'))
     text2 = str(address)
-    user = BotUser.objects.filter(id=message.from_user.id).first()
-    user_name = user.full_name
+    # user = BotUser.objects.filter(id=message.from_user.id).first()
     text = str(_(f"{text1} \n{text2}"))
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
 def let_us_start_from_the_beginning_message(message):
     keyboard = None
     text = str(_("Let's start from the beginning!"))
-    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)    
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
+
+def order_info_message(message, name, phone_number, address, id, cart_items, date):
+    keyboard = keyboards.order_more_or_to_beginning()
+    id = id
+    user = name  
+    phone_number = phone_number
+    address = address
+    date = date
+    items = str(cart_items)
+    text = str(_(f"Your order: \nID: {items} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: {id}"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
+
 
 
 
