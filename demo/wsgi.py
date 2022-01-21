@@ -6,7 +6,7 @@ from telebot import TeleBot
 from django.core.wsgi import get_wsgi_application
 from django.conf import settings
 from telebot.apihelper import ApiTelegramException
-from threading import Thread
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo.settings')
 
