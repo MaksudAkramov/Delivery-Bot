@@ -207,8 +207,8 @@ def order_info_message(message, name, phone_number, address, cart_items, id, dat
         item_txt = str(f"{item.product.name} \n     {item.quantity} * {item.product.price} = {item_price} sums")
         item_list.append(item_txt)
     item_list_newline = "\n".join(item_list)
-    text = str(_(f"Your order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: {item_list_newline} \nTotal: {total_price}"))
-    channel_notification = str(_(f"New order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: {item_list_newline} \nTotal: {total_price}"))
+    text = str(_(f"Your order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: \n{item_list_newline} \nTotal: {total_price}"))
+    channel_notification = str(_(f"New order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: \n{item_list_newline} \nTotal: {total_price}"))
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
     bot.send_message(CHANNEL_ID, text=str(channel_notification), reply_markup=None) 
 
