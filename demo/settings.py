@@ -35,6 +35,8 @@ DEBUG = os.environ['DEBUG'].lower() == 'true'
 
 ALLOWED_HOSTS = json.loads(os.environ['ALLOWED_HOSTS'])
 
+CHANNEL_ID = os.environ["CHANNEL_ID"]
+
 
 # Application definition
 

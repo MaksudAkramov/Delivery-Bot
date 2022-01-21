@@ -202,7 +202,7 @@ def check_cart(message, cat, cart):
             messaging.show_cart_items_messaging(message, cart_items)
             bot.register_next_step_handler(message, change_or_continue_your_order, cat, cart)
         elif Cart.objects.filter(user=user).first() is None or cart_items is None:
-            messaging.show_empty_cart_items_messaging(message, cart_items)
+            messaging.show_empty_cart_items_messaging(message)
             messaging.get_catalog(message)
             bot.register_next_step_handler(message, on_order_specified)
 

@@ -1,6 +1,8 @@
 from telebot import types
 from django.utils.translation import gettext_lazy as _
 
+from demo.settings import CHANNEL_ID
+
 from apps.bot import bot
 from apps.bot import keyboards
 from apps.bot.models import BotUser
@@ -139,15 +141,19 @@ def show_cart_items_in_the_beginning_messaging(message, cart_items):
 def show_cart_items_messaging(message, cart_items):
     keyboard = keyboards.cart_items_keyboard(cart_items)
     item_list = []
+    total_price = 0
     for item in cart_items:
-        item_txt = str({item.product} - {item.quantity})
+        item_price = item.quantity * item.product.price
+        total_price += item_price
+        item_txt = str(f"{item.product.name} \n     {item.quantity} x {item.product.price} = {item_price} sums")    
+        
         item_list.append(item_txt)
     item_list_newline = "\n".join(item_list)
     your_cart_txt = str(_('Your Cart:'))
-    text = f"{your_cart_txt} \n{item_list_newline}"
+    text = f"{your_cart_txt} \n{item_list_newline} \nTotal: {total_price}"
     bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)
 
-def show_empty_cart_items_messaging(message, cart_items):
+def show_empty_cart_items_messaging(message):
     keyboard = None
     text = str(_(f"It seems like you didn't put anything into your cart. 😔 \nLet's order something! 😊")) 
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)    
@@ -178,7 +184,6 @@ def deliver_location_message(message, address):
     keyboard = keyboards.confrim_keyboard()
     text1 = str(_('We will deliver to this location:'))
     text2 = str(address)
-    # user = BotUser.objects.filter(id=message.from_user.id).first()
     text = str(_(f"{text1} \n{text2}"))
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
@@ -187,16 +192,26 @@ def let_us_start_from_the_beginning_message(message):
     text = str(_("Let's start from the beginning!"))
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
 
-def order_info_message(message, name, phone_number, address, id, cart_items, date):
+def order_info_message(message, name, phone_number, address, cart_items, id, date):
     keyboard = keyboards.order_more_or_to_beginning()
-    id = id
+    id_order = id
     user = name  
     phone_number = phone_number
     address = address
     date = date
-    items = str(cart_items)
-    text = str(_(f"Your order: \nID: {items} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: {id}"))
+    item_list = []
+    total_price = 0
+    for item in cart_items:
+        item_price = item.quantity * item.product.price
+        total_price += item_price
+        item_txt = str(f"{item.product.name} \n     {item.quantity} * {item.product.price} = {item_price} sums")
+        item_list.append(item_txt)
+    item_list_newline = "\n".join(item_list)
+    text = str(_(f"Your order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: {item_list_newline} \nTotal: {total_price}"))
+    channel_notification = str(_(f"New order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: {item_list_newline} \nTotal: {total_price}"))
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
+    bot.send_message(CHANNEL_ID, text=str(channel_notification), reply_markup=None) 
+
 
 
 
