@@ -150,7 +150,8 @@ def show_cart_items_messaging(message, cart_items):
         item_list.append(item_txt)
     item_list_newline = "\n".join(item_list)
     your_cart_txt = str(_('Your Cart:'))
-    text = f"{your_cart_txt} \n{item_list_newline} \nTotal: {total_price}"
+    total = str(_("Total:"))
+    text = f"{your_cart_txt} \n{item_list_newline} \n{total} {total_price}"
     bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)
 
 def show_empty_cart_items_messaging(message):
@@ -176,7 +177,7 @@ def let_us_fill_the_cart(message):
 
 def choose_or_send_new_location_message(message):
     keyboard = keyboards.choose_location_keyboard(message)
-    text = str(_("Please choose your last locations or send a new location 📍"))
+    text = str(_("Please choose your recent locations or send a new location 📍"))
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
 
 
@@ -207,8 +208,15 @@ def order_info_message(message, name, phone_number, address, cart_items, id, dat
         item_txt = str(f"{item.product.name} \n     {item.quantity} * {item.product.price} = {item_price} sums")
         item_list.append(item_txt)
     item_list_newline = "\n".join(item_list)
-    text = str(_(f"Your order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: \n{item_list_newline} \nTotal: {total_price}"))
-    channel_notification = str(_(f"New order: \nID: {id_order} \nClient: {user} - +{phone_number} \nDate: {date} \nAddress: {address} \nItems: \n{item_list_newline} \nTotal: {total_price}"))
+    your_order = str(_("Your order:"))
+    new_order = str(_("New order:"))
+    client = str(_("Client:"))
+    date_str = str(_("Date:"))
+    address_str = str(_("Address:"))
+    items_str = str(_("Items:"))
+    total_str = str(_("Total:"))
+    text = f"{your_order} \nID: {id_order} \n{client} {user} - +{phone_number} \n{date_str}: {date} \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
+    channel_notification = f"{new_order} \nID: {id_order} \n{client} {user} - +{phone_number} \n{date_str}: {date} \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
     bot.send_message(CHANNEL_ID, text=str(channel_notification), reply_markup=None) 
 

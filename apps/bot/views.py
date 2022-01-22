@@ -95,13 +95,13 @@ def on_changes_specified(message: types.Message):
     elif message.text == str(_("Change Phone Number 📱")):
         messaging.change_number(message)
         bot.register_next_step_handler(message, on_number_change_specified)
-    elif message.text == str(_("↩️Back")):
+    elif message.text == str(_("↩️Back")) or message.text == str('↩️Назад') or message.text == str('↩️Back'):
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)
 
 @with_locale
 def on_name_change_specified(message: types.Message):
-    if message.text == str(_("↩️Back")):
+    if message.text == str(_("↩️Back")) or message.text == str('↩️Назад'):
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)
     else:
