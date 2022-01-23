@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-23 11:36+0000\n"
+"POT-Creation-Date: 2022-01-21 21:58+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,54 +20,308 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: keyboards.py:15
-msgid "Share your phone number"
-msgstr "Отправить номер телефона"
+#: bot/keyboards.py:12 bot/keyboards.py:54 bot/keyboards.py:61
+#: bot/keyboards.py:81 bot/keyboards.py:102 bot/keyboards.py:122
+#: bot/keyboards.py:136 bot/keyboards.py:147 bot/keyboards.py:179
+#: bot/views.py:98 bot/views.py:104 bot/views.py:122 bot/views.py:136
+#: bot/views.py:148 bot/views.py:159 bot/views.py:173 bot/views.py:195
+#: bot/views.py:220
+msgid "↩️Back"
+msgstr "↩️Назад"
 
-#: messaging.py:9
+#: bot/keyboards.py:26 bot/keyboards.py:69
+msgid "Share your phone number📱"
+msgstr "Отправить номер телефона📱"
+
+#: bot/keyboards.py:33
+msgid "Add ad"
+msgstr ""
+
+#: bot/keyboards.py:35 bot/keyboards.py:42 bot/views.py:69
+msgid "⚙️Settings"
+msgstr "⚙️Настройки"
+
+#: bot/keyboards.py:43 bot/views.py:72
+msgid "📒Catalog"
+msgstr "📒Каталог"
+
+#: bot/keyboards.py:44 bot/keyboards.py:145 bot/views.py:77 bot/views.py:200
+msgid "🛒Cart"
+msgstr "🛒Корзина"
+
+#: bot/keyboards.py:51 bot/views.py:89
+msgid "Change language 🌎"
+msgstr "Выберите язык 🌎"
+
+#: bot/keyboards.py:52 bot/views.py:92
+msgid "Change Name"
+msgstr "Поменять имя"
+
+#: bot/keyboards.py:53 bot/views.py:95
+msgid "Change Phone Number 📱"
+msgstr "Поменять номер телефона 📱"
+
+#: bot/keyboards.py:71
+msgid "Back"
+msgstr "Назад"
+
+#: bot/keyboards.py:85 bot/keyboards.py:106
+#, python-brace-format
+msgid "{cat.name}"
+msgstr "{cat.name}"
+
+#: bot/keyboards.py:123 bot/messaging.py:104 bot/views.py:162
+msgid "Add product to cart 🛒"
+msgstr "Добавить продукт в корзину 🛒"
+
+#: bot/keyboards.py:146 bot/keyboards.py:155 bot/keyboards.py:178
+#: bot/views.py:209 bot/views.py:239
+msgid "Order✅"
+msgstr "Заказать✅"
+
+#: bot/keyboards.py:148 bot/views.py:213
+msgid "Return to catalog 📒"
+msgstr "Вернуться в каталог 📒"
+
+#: bot/keyboards.py:154 bot/keyboards.py:177 bot/views.py:226
+msgid "Empty your cart ♻️"
+msgstr "Очистить корзину ♻️"
+
+#: bot/keyboards.py:156 bot/keyboards.py:234 bot/views.py:223 bot/views.py:299
+msgid "↩️Back to the beginning"
+msgstr "↩️В начало"
+
+#: bot/keyboards.py:160 bot/keyboards.py:183
+#, python-brace-format
+msgid ""
+"{item.product} \n"
+" {item.quantity} pc(s)"
+msgstr ""
+"{item.product} \n"
+" {item.quantity} шт"
+
+#: bot/keyboards.py:217
+msgid "Send new location 📍"
+msgstr "Отправить локацию 📍"
+
+#: bot/keyboards.py:219 bot/keyboards.py:227 bot/views.py:249 bot/views.py:279
+msgid "❌Cancel order"
+msgstr "❌Отменить заказ"
+
+#: bot/keyboards.py:226 bot/views.py:284
+msgid "Confirm✅"
+msgstr "Подтвердить✅"
+
+#: bot/keyboards.py:233 bot/views.py:296
+msgid "Order more➕"
+msgstr "Заказать еще➕"
+
+#: bot/messaging.py:12
 msgid "Choose language"
 msgstr "Выберите язык"
 
-#: messaging.py:15
+#: bot/messaging.py:18
 msgid "Enter your full name"
 msgstr "Введите полное имя"
 
-#: messaging.py:20
+#: bot/messaging.py:24
 msgid "Hi! Nice to meet you again!"
-msgstr "Привет! Рад вас снова видет!"
+msgstr "Привет! Рад видеть вас снова!"
 
-#: messaging.py:25
+#: bot/messaging.py:31
 msgid "Please enter your phone number: "
 msgstr "Отправьте номер телефона"
 
-#: messaging.py:30
-msgid "Dear"
-msgstr "Уважаемий"
+#: bot/messaging.py:37
+msgid "Successful registration"
+msgstr "Успешная регистрация"
 
-#: messaging.py:31
-msgid "Thanks for registration"
-msgstr "Спасибо за регистрацию"
+#: bot/messaging.py:47
+msgid "Where do we start?"
+msgstr "С чего начнем?"
 
-#: models.py:8 models.py:15
+#: bot/messaging.py:53
+msgid "What do you want to change?"
+msgstr "Что хотите поменять?"
+
+#: bot/messaging.py:59
+msgid "Enter your name:"
+msgstr "Введите имя"
+
+#: bot/messaging.py:65
+msgid "Updated! Now, you can continue your order"
+msgstr "Обновлено! Теперь, можете продолжить свой заказ"
+
+#: bot/messaging.py:71
+msgid "Return to Homepage"
+msgstr "Обратно в начало"
+
+#: bot/messaging.py:78
+msgid "Enter your new number"
+msgstr "Введите ваш новый номер"
+
+#: bot/messaging.py:85
+msgid "Price:"
+msgstr "Цена"
+
+#: bot/messaging.py:86
+msgid "Sum"
+msgstr "сум"
+
+#: bot/messaging.py:93
+msgid "What do you want to order"
+msgstr "Что хотите заказать"
+
+#: bot/messaging.py:99
+msgid "Chooce product you want"
+msgstr "Выберите продукт который вы хотите"
+
+#: bot/messaging.py:110
+msgid ""
+"How many items do you want to purchase? \n"
+"If you want to purchase more than 6 items, write down your number in "
+"digits , e.g: 10"
+msgstr ""
+"Выберите количество\n"
+"Если хотите заказать больше 6 шт, напишите кол-во цифрами, например: 10"
+
+#: bot/messaging.py:119
+msgid "pc(s) of"
+msgstr "шт"
+
+#: bot/messaging.py:120
+msgid "added to your cart!"
+msgstr "Добавлено в корзину!"
+
+#: bot/messaging.py:126
+msgid "Anything else? 😉"
+msgstr "Что-нибудь еще? 😉"
+
+#: bot/messaging.py:137 bot/messaging.py:152
+msgid "Your Cart:"
+msgstr "Ваша корзина:"
+
+#: bot/messaging.py:153 bot/messaging.py:217
+msgid "Total:"
+msgstr ""
+
+#: bot/messaging.py:159 bot/messaging.py:174
+msgid ""
+"It seems like you didn't put anything into your cart. 😔 \n"
+"Let's order something! 😊"
+msgstr ""
+"Кажется ваша корзина пуста. 😔 \n"
+"Давайте выберем что-нибудь! 😊"
+
+#: bot/messaging.py:164
+msgid "Ok, let's continue!"
+msgstr "Окей, продолжим..."
+
+#: bot/messaging.py:169
+msgid ""
+"Your cart is empty, now! \n"
+"Let's order something! 😊"
+msgstr ""
+"Теперь ваша корзина пуста!\n"
+"Давайте выберем что-нибудь! 😊"
+
+#: bot/messaging.py:180
+msgid "Please choose your recent locations or send a new location 📍"
+msgstr "Выберите ваши недавние адреса или же отправтье новую локацию 📍"
+
+#: bot/messaging.py:186
+msgid "We will deliver to this location:"
+msgstr "Мы доставим в этот адрес: "
+
+#: bot/messaging.py:188
+#, python-brace-format
+msgid ""
+"{text1} \n"
+"{text2}"
+msgstr ""
+"{text1} \n"
+"{text2}"
+
+#: bot/messaging.py:193
+msgid "Let's start from the beginning!"
+msgstr "Начнем сначала!"
+
+#: bot/messaging.py:211
+#, fuzzy
+#| msgid "Your Cart:"
+msgid "Your order:"
+msgstr "Ваша корзина:"
+
+#: bot/messaging.py:212
+msgid "New order:"
+msgstr ""
+
+#: bot/messaging.py:213
+msgid "Client:"
+msgstr ""
+
+#: bot/messaging.py:214
+msgid "Date:"
+msgstr ""
+
+#: bot/messaging.py:215
+msgid "Address:"
+msgstr ""
+
+#: bot/messaging.py:216
+msgid "Items:"
+msgstr ""
+
+#: bot/models.py:10 bot/models.py:17
 msgid "Russian"
 msgstr "Русский"
 
-#: models.py:9 models.py:16
+#: bot/models.py:11 bot/models.py:18
 msgid "English"
 msgstr "Английский"
 
-#: models.py:10 models.py:17
+#: bot/models.py:12 bot/models.py:19
 msgid "Uzbek"
 msgstr "Узбекский"
 
-#: models.py:21
+#: bot/models.py:23
 msgid "ID"
 msgstr "ID"
 
-#: models.py:23
+#: bot/models.py:25
 msgid "Full Name"
 msgstr "Имя-Фамилия"
 
-#: models.py:24
+#: bot/models.py:26
 msgid "Phone Number"
 msgstr "Номер телефона"
+
+#: bot/messaging.py:211
+msgid "Your order:"
+msgstr "Ваш заказ:"
+
+#: bot/messaging.py:212
+msgid "New order:"
+msgstr "Новый заказ:"
+
+
+#: bot/messaging.py:213
+msgid "Client:"
+msgstr "Клиент:"
+
+#: bot/messaging.py:214
+msgid "Date:"
+msgstr "Дата:"
+
+#: bot/messaging.py:215
+msgid "Address:"
+msgstr "Адрес:"
+
+#: bot/messaging.py:216
+msgid Items:
+msgstr 🛒Корзина:
+
+#: bot/messaging.py:217
+msgid "Total:"
+msgstr "Итого:"
+
