@@ -130,13 +130,18 @@ def anything_else_message(message: types.Message):
 def show_cart_items_in_the_beginning_messaging(message, cart_items):
     keyboard = keyboards.cart_items_in_the_beginning_keyboard(cart_items)
     item_list = []
+    total_price = 0
     for item in cart_items:
-        item_txt = str({item.product} - {item.quantity})
+        item_price = item.quantity * item.product.price
+        total_price += item_price
+        item_txt = str(f"{item.product.name} \n     {item.quantity} x {item.product.price} = {item_price} sums")    
+        
         item_list.append(item_txt)
     item_list_newline = "\n".join(item_list)
     your_cart_txt = str(_('Your Cart:'))
-    text = f"{your_cart_txt} \n{item_list_newline}"
-    bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)  
+    total = str(_("Total:"))
+    text = f"{your_cart_txt} \n{item_list_newline} \n{total} {total_price}"
+    bot.send_message(message.from_user.id, str(text), reply_markup=keyboard)
 
 def show_cart_items_messaging(message, cart_items):
     keyboard = keyboards.cart_items_keyboard(cart_items)
@@ -173,6 +178,25 @@ def let_us_fill_the_cart(message):
     keyboard = None
     text = str(_(f"It seems like you didn't put anything into your cart. 😔 \nLet's order something! 😊")) 
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+
+def change_or_delete_item_from_cart_message(message):
+    keyboard = keyboards.change_or_delete_item_from_cart_keyboard()
+    text = str(_(f"Choose new quantity or delete item from cart! \nIf you want more than 9, enter your number with digits, e.g 10"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)    
+
+
+def item_deleted_message(message):
+    keyboard = keyboards.cart_status()
+    text = str(_("Item deleted from your cart!"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
+
+def cart_item_updated_message(message):
+    keyboard = keyboards.cart_status()
+    text = str(_("Qauntity of item is updated!"))
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard)
+
 
 
 def choose_or_send_new_location_message(message):
