@@ -126,7 +126,8 @@ def add_to_basket_with_back_keyboard():
 
 
 def choose_quantity_keyboard():
-    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    keyboard = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+    buttons = []
     button1 = types.KeyboardButton(text=str(1))
     button2 = types.KeyboardButton(text=str(2))
     button3 = types.KeyboardButton(text=str(3))
@@ -134,9 +135,14 @@ def choose_quantity_keyboard():
     button5 = types.KeyboardButton(text=str(5))
     button6 = types.KeyboardButton(text=str(6))
     button7 = types.KeyboardButton(text=str(_('↩️Back')))
-
-    keyboard.add(button1, button2, button3, button4, button5, button6, button7)
-
+    buttons.append(button1)
+    buttons.append(button2)
+    buttons.append(button3)
+    buttons.append(button4)
+    buttons.append(button5)
+    buttons.append(button6)
+    keyboard.row(*buttons)
+    keyboard.add(button7)
     return keyboard
 
 
@@ -157,7 +163,7 @@ def cart_items_in_the_beginning_keyboard(cart_items):
     buttons = []
     count = 0
     for item in cart_items:
-        text = _(f"{item.product} \n {item.quantity} pc(s)")
+        text = f"{item.product}"
         menu_button = types.KeyboardButton(text=str(text))
         if count < 2:
             buttons.append(menu_button)
@@ -180,7 +186,7 @@ def cart_items_keyboard(cart_items):
     buttons = []
     count = 0
     for item in cart_items:
-        text = _(f"{item.product} \n {item.quantity} pc(s)")
+        text = f"{item.product}"
         menu_button = types.KeyboardButton(text=str(text))
         if count < 2:
             buttons.append(menu_button)
@@ -195,13 +201,32 @@ def cart_items_keyboard(cart_items):
     return keyboard  
 
 
-
-# def share_location_keyboard():
-#     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-#     text=_("Share your location, please 📍")
-#     reg_button = types.KeyboardButton(text=str(text), request_location=True)
-#     keyboard.add(reg_button)
-#     return keyboard
+def change_or_delete_item_from_cart_keyboard():
+    keyboard = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
+    buttons = []
+    button1 = types.KeyboardButton(text=1)
+    button2 = types.KeyboardButton(text=2)
+    button3 = types.KeyboardButton(text=3)
+    button4 = types.KeyboardButton(text=4)
+    button5 = types.KeyboardButton(text=5)
+    button6 = types.KeyboardButton(text=6)
+    button7 = types.KeyboardButton(text=7)
+    button8 = types.KeyboardButton(text=8)
+    button9 = types.KeyboardButton(text=9)
+    button10 = types.KeyboardButton(text=str(_("Delete item from cart ❌")))
+    button11 = types.KeyboardButton(text=str(_('↩️Back')))
+    buttons.append(button1)
+    buttons.append(button2)
+    buttons.append(button3)
+    buttons.append(button4)
+    buttons.append(button5)
+    buttons.append(button6)
+    buttons.append(button7)
+    buttons.append(button8)
+    buttons.append(button9)
+    keyboard.row(*buttons)
+    keyboard.add(button10, button11)
+    return keyboard
 
 
 def choose_location_keyboard(message):
