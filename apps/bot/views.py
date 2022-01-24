@@ -1,5 +1,6 @@
 from telebot import types
 from geopy.geocoders import Nominatim
+from datetime import datetime
 
 from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -307,7 +308,9 @@ def on_address_specified(message, address, cart_items):
         order_info = OrderInfo.objects.create(order_owner=name, phone_number=phone_number, address=address, order_items=str(cart_items))
         id = order_info.id
         date = order_info.created_at
-        messaging.order_info_message(message, name, phone_number, address, cart_items, id, date)
+        date_today = datetime.today().strftime('%d-%m-%Y')
+        order_info.date = date_today
+        messaging.order_info_message(message, name, phone_number, address, cart_items, id, date, date_today)
         Cart.objects.filter(user=user).delete()
         bot.register_next_step_handler(message, order_more_or_back)
 
