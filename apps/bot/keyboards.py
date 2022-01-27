@@ -198,7 +198,7 @@ def cart_items_keyboard(cart_items):
             buttons.append(menu_button)
     keyboard.row(*buttons)
     keyboard.add(button1, button2, button)
-    return keyboard  
+    return keyboard    
 
 
 def change_or_delete_item_from_cart_keyboard():

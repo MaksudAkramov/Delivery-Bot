@@ -195,13 +195,13 @@ def add_quantity(message, product, cat):
 @with_locale  
 def check_cart(message, cat, cart):
     user = BotUser.objects.filter(id=message.from_user.id).first()
-    cart_items = CartItem.objects.filter(cart=cart).first()
+    cart_items = CartItem.objects.filter(cart=cart).all()
     if message.text == str(_('↩️Back')):
         messaging.get_category_menu(message, cat)
         bot.register_next_step_handler(message, choose_product, cat)
 
     elif message.text == str(_('🛒Cart')):
-        if Cart.objects.filter(user=user).first() and cart_items:
+        if Cart.objects.filter(user=user).first():
             messaging.show_cart_items_messaging(message, cart_items)
             bot.register_next_step_handler(message, change_or_continue_your_order, cat, cart)
         elif Cart.objects.filter(user=user).first() is None and not cart_items:
