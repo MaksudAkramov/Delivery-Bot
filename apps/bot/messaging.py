@@ -239,8 +239,8 @@ def order_info_message(message, name, phone_number, address, cart_items, id, dat
     address_str = str(_("Address:"))
     items_str = str(_("Items:"))
     total_str = str(_("Total:"))
-    text = f"{your_order} \nID: {id_order} \n{client} {user} - +{phone_number} \n{date_str}: {date_today} ({date}) \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
-    channel_notification = f"{new_order} \nID: {id_order} \n{client} {user} - +{phone_number} \n{date_str}: {date} \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
+    text = f"{your_order} \nID: {id_order} \n{client} {user} - {phone_number} \n{date_str}: {date_today} ({date}) \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
+    channel_notification = f"{new_order} \nID: {id_order} \n{client} {user} - {phone_number} \n{date_str}: {date} \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
     bot.send_message(CHANNEL_ID, text=str(channel_notification), reply_markup=None) 
 

@@ -115,8 +115,9 @@ def on_name_change_specified(message: types.Message):
 def on_language_change_specified(message: types.Message):
         locale = BotUser.Locale.get_from_value(message.text)
         BotUser.objects.update(id=message.from_user.id, locale = locale)
-        messaging.send_updated_status(message)
-        bot.register_next_step_handler(message, on_changes_specified)
+        with change_locale(locale):
+            messaging.send_updated_status(message)
+            bot.register_next_step_handler(message, on_changes_specified)
 
 @with_locale
 def on_number_change_specified(message):
@@ -137,11 +138,10 @@ def on_order_specified(message: types.Message):
     if message.text == str(_("↩️Back")):
             messaging.back(message)
             bot.register_next_step_handler(message, on_command_specified)
-    categories = Category.objects.all()
-    for cat in categories:
-        if message.text == cat.name:
-            messaging.get_category_menu(message, cat)
-            bot.register_next_step_handler(message, choose_product, cat)
+    if message.text:
+        cat = Category.objects.filter(name=message.text).first()
+        messaging.get_category_menu(message, cat)
+        bot.register_next_step_handler(message, choose_product, cat)
 
 @with_locale
 def choose_product(message,cat):
@@ -201,7 +201,7 @@ def check_cart(message, cat, cart):
         bot.register_next_step_handler(message, choose_product, cat)
 
     elif message.text == str(_('🛒Cart')):
-        if Cart.objects.filter(user=user).first():
+        if Cart.objects.filter(user=user).exists():
             messaging.show_cart_items_messaging(message, cart_items)
             bot.register_next_step_handler(message, change_or_continue_your_order, cat, cart)
         elif Cart.objects.filter(user=user).first() is None and not cart_items:
@@ -229,10 +229,10 @@ def change_or_continue_your_order(message, cat, cart):
     elif message.text == str(_('Empty your cart ♻️')):
         user = BotUser.objects.filter(id=message.from_user.id).first()
         cart = Cart.objects.filter(user=user).first()
-        if Cart.objects.filter(user=user).first():
+        if cart:
             Cart.objects.filter(user=user).delete()
             messaging.empty_cart_message(message)
-        elif Cart.objects.filter(user=user).first() is None or cart_items is None:
+        elif not (cart and cart_items):
             messaging.let_us_fill_the_cart(message)
         messaging.let_us_continue(message)
         bot.register_next_step_handler(message, check_cart, cat, cart)
@@ -322,6 +322,3 @@ def order_more_or_back(message):
     elif message.text == str(_('↩️Back to the beginning')):
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)        
-
-
-            
