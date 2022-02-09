@@ -6,7 +6,9 @@ from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext_lazy as _
 
-from apps.bot import bot
+from demo.settings import PROVIDER_TOKEN
+
+from apps.bot import bot, keyboards
 from apps.bot import messaging
 from apps.bot.utils import change_locale, with_locale
 from apps.bot.models import Address, AddressItem, BotUser
@@ -267,7 +269,7 @@ def get_address(message, cart_items):
     address_model = Address.objects.filter(user=user).first()
     all_addresses = AddressItem.objects.filter(base=address_model).all()
 
-    if message.text == str(_('❌Cancel order')):
+    if message.text == str(_('❌Cancel')):
         messaging.let_us_start_from_the_beginning_message(message)
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)
@@ -293,11 +295,10 @@ def get_address(message, cart_items):
         bot.register_next_step_handler(message, on_address_specified, address, cart_items)
                
 
-
 @with_locale
 def on_address_specified(message, address, cart_items):
     user = BotUser.objects.filter(id=message.from_user.id).first()
-    if message.text == str(_("❌Cancel order")):
+    if message.text == str(_("❌Cancel")):
         messaging.let_us_start_from_the_beginning_message(message)
         messaging.back(message)
         bot.register_next_step_handler(message, on_command_specified)
@@ -305,14 +306,64 @@ def on_address_specified(message, address, cart_items):
     elif message.text == str(_("Confirm✅")):
         name = user.full_name     
         phone_number = user.phone_number
-        order_info = OrderInfo.objects.create(order_owner=name, phone_number=phone_number, address=address, order_items=str(cart_items))
+        messaging.order_info_message(message, name, phone_number, address, cart_items)
+        bot.register_next_step_handler(message, make_payement, cart_items, address)
+
+
+@with_locale
+def make_payement(message, cart_items, address):
+    if message.text == str("❌Cancel"):
+        messaging.let_us_start_from_the_beginning_message(message)
+        messaging.back(message)
+        bot.register_next_step_handler(message, on_command_specified)
+    elif message.text == str(_("Card")):
+        messaging.payment_message(message, cart_items)
+        bot.register_next_step_handler(message, got_payment, address, cart_items)
+    elif message.text == str(_("Cash")):
+        user = BotUser.objects.filter(id=message.from_user.id).first()
+        name = user.full_name
+        phone_number = user.phone_number
+        order_info = OrderInfo.objects.create(order_owner=name, phone_number=phone_number, address=address, order_items=str(cart_items), payment_method=str(_('cash')))
         id = order_info.id
         date = order_info.created_at
         date_today = datetime.today().strftime('%d-%m-%Y')
         order_info.date = date_today
-        messaging.order_info_message(message, name, phone_number, address, cart_items, id, date, date_today)
+        payment_method = order_info.payment_method
+        messaging.after_payment_order_info_message(message, name, phone_number, address, id, date, date_today, cart_items, payment_method)
         Cart.objects.filter(user=user).delete()
         bot.register_next_step_handler(message, order_more_or_back)
+
+
+@bot.pre_checkout_query_handler(func=lambda query: True)
+def checkout(pre_checkout_query):
+    bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True,
+                                  error_message="Aliens tried to steal your card's CVV, but we successfully protected your credentials,"
+                                                " try to pay again in a few minutes, we need a small rest.")
+
+
+@bot.message_handler(content_types=['successful_payment'])
+@with_locale
+def got_payment(message, address, cart_items):
+    user = BotUser.objects.filter(id=message.from_user.id).first()
+    name = user.full_name
+    phone_number = user.phone_number
+    
+    bot.send_message(message.from_user.id,
+                     'Hoooooray! Thanks for payment! We will proceed your order for `{} {}` as fast as possible! '
+                     'Stay in touch.\n\nUse /buy again to get a Time Machine for your friend!'.format(
+                         message.successful_payment.total_amount / 100, message.successful_payment.currency),
+                     parse_mode='Markdown', reply_markup=keyboards.remove_keyboard())
+    
+    order_info = OrderInfo.objects.create(order_owner=name, phone_number=phone_number, address=address, order_items=str(cart_items), payment_method=str(_('card')))
+    id = order_info.id
+    date = order_info.created_at
+    date_today = datetime.today().strftime('%d-%m-%Y')
+    order_info.date = date_today
+    payment_method = order_info.payment_method
+    messaging.after_payment_order_info_message(message, name, phone_number, address, id, date, date_today, cart_items, payment_method)
+    Cart.objects.filter(user=user).delete()
+    bot.register_next_step_handler(message, order_more_or_back)
+
 
 @with_locale
 def order_more_or_back(message):

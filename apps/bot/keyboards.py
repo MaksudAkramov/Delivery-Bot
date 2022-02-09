@@ -241,7 +241,7 @@ def choose_location_keyboard(message):
 
     text=_("Send new location 📍")
     button1 = types.KeyboardButton(text=str(text), request_location=True)
-    button2 = types.KeyboardButton(text=str(_('❌Cancel order')))
+    button2 = types.KeyboardButton(text=str(_('❌Cancel')))
     keyboard.add(button1, button2)
 
     return keyboard    
@@ -249,7 +249,7 @@ def choose_location_keyboard(message):
 def confrim_keyboard():
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     button = types.KeyboardButton(text=str(_('Confirm✅')))
-    button1 = types.KeyboardButton(text=str(_('❌Cancel order')))
+    button1 = types.KeyboardButton(text=str(_('❌Cancel')))
     keyboard.add(button, button1)
     return keyboard
 
@@ -259,3 +259,12 @@ def order_more_or_to_beginning():
     button2 = types.KeyboardButton(text=str(_('↩️Back to the beginning')))
     keyboard.add(button1, button2)
     return keyboard    
+
+def type_payement():
+    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True) 
+    button1 = types.KeyboardButton(text=str(_('Card')))
+    button2 = types.KeyboardButton(text=str(_('Cash')))
+    button = types.KeyboardButton(text=str(_('❌cancel payement')))
+    keyboard.add(button1, button2, button )
+    return keyboard
+

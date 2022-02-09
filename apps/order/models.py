@@ -10,6 +10,8 @@ class OrderInfo(models.Model):
     created_at = models.TimeField(auto_now_add=True)
     address = models.CharField(max_length=300)
     order_items = models.TextField()
+    payment_method = models.CharField(max_length=30, null=True)
 
+    
     def __str__(self) -> str:
         return str(self.id)

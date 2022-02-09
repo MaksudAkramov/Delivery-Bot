@@ -2,6 +2,7 @@ from telebot import types
 from django.utils.translation import gettext_lazy as _
 
 from demo.settings import CHANNEL_ID
+from demo.settings import PROVIDER_TOKEN 
 
 from apps.bot import bot
 from apps.bot import keyboards
@@ -217,7 +218,52 @@ def let_us_start_from_the_beginning_message(message):
     text = str(_("Let's start from the beginning!"))
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
 
-def order_info_message(message, name, phone_number, address, cart_items, id, date, date_today):
+def payment_message(message, cart_items):
+    total_price = 0
+    item_list = []
+    for item in cart_items:
+        item_price = item.quantity * item.product.price
+        total_price += item_price
+        item_txt = str(f"{item.product.name} \n     {item.quantity} * {item.product.price} = {item_price} sums")
+        item_list.append(item_txt)
+    item_list_newline = "\n".join(item_list)    
+    prices = [types.LabeledPrice(label=str(_('Total')), amount=total_price*100)]
+    description = f"{item_list_newline} \nTotal: {total_price}"
+    bot.send_invoice(message.from_user.id, title=str(_('Your order')),
+                    description=description,
+                    provider_token=PROVIDER_TOKEN,
+                    currency='uzs',
+                    is_flexible=False,
+                    prices=prices,
+                    start_parameter='time-machine-example',
+                    invoice_payload='HAPPY FRIDAYS COUPON',
+                    send_phone_number_to_provider=True)
+
+
+def order_info_message(message, name, phone_number, address, cart_items):
+    keyboard = keyboards.type_payement()
+    id_order = id
+    user = name  
+    phone_number = phone_number
+    address = address
+    item_list = []
+    total_price = 0
+    for item in cart_items:
+        item_price = item.quantity * item.product.price
+        total_price += item_price
+        item_txt = str(f"{item.product.name} \n     {item.quantity} * {item.product.price} = {item_price} sums")
+        item_list.append(item_txt)
+    item_list_newline = "\n".join(item_list)
+    your_order = str(_("Your order:"))
+    client = str(_("Client:"))
+    address_str = str(_("Address:"))
+    items_str = str(_("Items:"))
+    total_str = str(_("Total:"))
+    text = f"{your_order} \nID: {id_order} \n{client} {user} - {phone_number}\n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
+    bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
+
+
+def after_payment_order_info_message(message, name, phone_number, address, id, date, date_today, cart_items, payment_method):
     keyboard = keyboards.order_more_or_to_beginning()
     id_order = id
     user = name  
@@ -239,10 +285,15 @@ def order_info_message(message, name, phone_number, address, cart_items, id, dat
     address_str = str(_("Address:"))
     items_str = str(_("Items:"))
     total_str = str(_("Total:"))
-    text = f"{your_order} \nID: {id_order} \n{client} {user} - {phone_number} \n{date_str}: {date_today} ({date}) \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
+    payment = str(_("Payment Method: "))
+    text = f"{your_order} \nID: {id_order} \n{payment} {payment_method} \n{client} {user} - {phone_number} \n{date_str}: {date_today} ({date}) \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
     channel_notification = f"{new_order} \nID: {id_order} \n{client} {user} - {phone_number} \n{date_str}: {date} \n{address_str} {address} \n{items_str} \n{item_list_newline} \n{total_str} {total_price}"
     bot.send_message(message.from_user.id, text=str(text), reply_markup=keyboard) 
-    bot.send_message(CHANNEL_ID, text=str(channel_notification), reply_markup=None) 
+    bot.send_message(CHANNEL_ID, text=str(channel_notification), reply_markup=None)   
+
+ 
+
+
 
 
 
